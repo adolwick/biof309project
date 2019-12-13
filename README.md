@@ -1,4 +1,4 @@
-# Welcome to my BIOF 309 Project.
+# Tracking a Decade of Distance Running
 
 I have been a distance runner since January 2009 and have logged every one of my runs from January 1st, 2010, to the present. In that time I have completed 10 seasons of cross country running (1 middle school, 4 high school, 4 college, 1 post-collegiate) and 5 seasons of distance running for track and field (1 high school, 4 college). For the majority of the past ten years, I have run between 5 and 7 times a week. I have competed in well over 150 races, and have spent some time doing basic analyses on my times in these races, but up to the present I have never analyzed my day-to-day runs.
 
