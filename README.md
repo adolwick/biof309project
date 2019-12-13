@@ -6,3 +6,6 @@ Since it is the end of a decade, I was motivated to compile all my runs from the
 
 In df_management.ipynb, I ran in the raw data set and cleaned it using pandas and numpy to the point that I could run analyses on the data. Then, I exported it to clean.csv to have a copy of the cleaned dataset. I imported clean.csv into df_analysis.ipynb and proceeded to visualize the data using matplotlib and to analyze it using statsmodels.api. This allows me to understand trends in my running career over time as well as providing me with examples of how to solve the types of problems I will most commonly face in my data analysis projects in my lab.
 
+In the process of creating this project, I included several tests in my code via assert() statements. I also created a function called splitdate to split a column of dates within a Pandas dataframe into three columns, and I added a test to ensure this function functions properly.
+
+Thanks to John Lee and Ryan Patterson for their help in creating this project and to Tiffany Ko, India Little, and Emma Schopp for their help in brainstorming ideas for it.
