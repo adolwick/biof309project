@@ -1,4 +1,4 @@
-# Welcome to my BIOF 309 Project.
+# Tracking a Decade of Distance Running
 
 I have been a distance runner since January 2009 and have logged every one of my runs from January 1st, 2010, to the present. In that time I have completed 10 seasons of cross country running (1 middle school, 4 high school, 4 college, 1 post-collegiate) and 5 seasons of distance running for track and field (1 high school, 4 college). For the majority of the past ten years, I have run between 5 and 7 times a week. I have competed in well over 150 races, and have spent some time doing basic analyses on my times in these races, but up to the present I have never analyzed my day-to-day runs.
 
@@ -6,3 +6,6 @@ Since it is the end of a decade, I was motivated to compile all my runs from the
 
 In df_management.ipynb, I ran in the raw data set and cleaned it using pandas and numpy to the point that I could run analyses on the data. Then, I exported it to clean.csv to have a copy of the cleaned dataset. I imported clean.csv into df_analysis.ipynb and proceeded to visualize the data using matplotlib and to analyze it using statsmodels.api. This allows me to understand trends in my running career over time as well as providing me with examples of how to solve the types of problems I will most commonly face in my data analysis projects in my lab.
 
+In the process of creating this project, I included several tests in my code via assert() statements. I also created a function called splitdate to split a column of dates within a Pandas dataframe into three columns, and I added a test to ensure this function functions properly.
+
+Thanks to John Lee and Ryan Patterson for their help in creating this project and to Tiffany Ko, India Little, and Emma Schopp for their help in brainstorming ideas for it.
