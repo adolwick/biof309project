@@ -48,13 +48,17 @@ testingpred <- testing
 testingpred$pred <- pred_run
 
 ##### Attempt No. 2 (aka Model B) -- with runtime #####
-runs2 <- r_data %>%
+r_data2 <- r_data %>%
   separate(time_corr, c("h", "m", "s"), sep = ":") %>%
   filter(!is.na(pace_min))
 
-runs2$h <- as.numeric(runs2$h)
-runs2$m <- as.numeric(runs2$m)
-runs2$s <- as.numeric(runs2$s)
+r_data2$h <- as.numeric(r_data2$h)
+r_data2$m <- as.numeric(r_data2$m)
+r_data2$s <- as.numeric(r_data2$s)
+
+runs2 <- r_data2 %>%
+  mutate(runtime_min = 60*h + m + s/60) %>%
+  select(1,2,7,6)
 
 sample_run2 = sample.split(runs2$pace_min, SplitRatio = .75)
 training2 = subset(runs2, sample_run == TRUE)
@@ -66,9 +70,9 @@ rf_run2 <- randomForest(
   importance=TRUE
 )
 rf_run2
-  #54.28% var explained ... better than last time
+  #80.97% var explained ... WAY better than last time
 print(rf_run2$mse)
-  #final mse = .39 ... better than last time
+  #final mse = .16 ... WAY better than last time
 print(rf_run2$importance)
 #            %IncMSE IncNodePurity
 # Date    0.17894620     146.93419
@@ -76,12 +80,11 @@ print(rf_run2$importance)
 # h       0.32321526      34.68238
 # m       1.04332152     207.14858
 # s       0.01125933      49.66407
-# the minutes variable was unsurprisingly very important
-# minutes and mileage were most important
-  # given how pace is calculated, this makes sense
+# the runtime variable was unsurprisingly hugely important
+# mileage was also very important, which also makes sense
 
 #predicting the pace of my runs
-pred_run2 = predict(rf_run2, newdata=testing2[-6])
+pred_run2 = predict(rf_run2, newdata=testing2[-4])
 
 #looking at the predicted values of each run in the test sample
 testingpred2 <- testing2
@@ -89,11 +92,11 @@ testingpred2$pred_w_time <- pred_run2
 
 ##### Comparing the Two Models #####
 compare <- full_join(testingpred, testingpred2)
-compare <- compare %>% select(1:2,5:7,3:4,8)
+compare <- compare %>% select(1:2,5,3:4,6)
 
-colnames(compare)[6] <- "actual_pace"
-colnames(compare)[7] <- "rfpred_pace"
-colnames(compare)[8] <- "rfpred_pace_w_time"
+colnames(compare)[4] <- "actual_pace"
+colnames(compare)[5] <- "rfpred_pace"
+colnames(compare)[6] <- "rfpred_pace_w_time"
 
 compared <- compare %>%
   mutate(wo_time_error = abs(rfpred_pace - actual_pace)) %>%
@@ -113,9 +116,9 @@ ggplot(data = compared) +
   theme_dark() +
   scale_x_date(breaks = "years", date_labels = "20%y") +
   scale_y_continuous(name = "Accuracy of Model B compared to A (min/mi)",
-                     breaks = c(-1.5,-1,-0.5,0,0.5,1,1.5), 
-                     labels = c(-1.5,-1,-0.5,0,0.5,1,1.5),
-                     limits = c(-1.51,1.51)) +
+                     breaks = c(-0.5,0,0.5,1,1.5,2), 
+                     labels = c(-0.5,0,0.5,1,1.5,2),
+                     limits = c(-0.5,2)) +
   ggtitle("Accuracy of Model B (w/ run time) over Model A (w/o run time) ")
 
 
@@ -130,9 +133,9 @@ ggplot(data = compared_A) +
                      labels = c(0,2,4,6,8,10,12,14,16,18),
                      limits = c(0.5,18.5)) +
   scale_y_continuous(name = "Accuracy of Model B compared to A (min/mi)",
-                     breaks = c(-1.5,-1,-0.5,0,0.5,1,1.5), 
-                     labels = c(-1.5,-1,-0.5,0,0.5,1,1.5),
-                     limits = c(-1.51,1.51)) +
+                     breaks = c(-0.5,0,0.5,1,1.5,2), 
+                     labels = c(-0.5,0,0.5,1,1.5,2),
+                     limits = c(-0.5,2)) +
   ggtitle("Accuracy of Model B (w/ run time) over Model A (w/o run time) ")
 
 
