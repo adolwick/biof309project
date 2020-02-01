@@ -1,12 +1,16 @@
-#running through random forests
+### Running Through Random Forests
+
+##### Setup #####
 library(tidyverse)
 library(ggplot2)
+library(scales)
+library(RColorBrewer)
 library(randomForest)
 require(caTools)
 setwd("~/dolwick_project")
 r_data <- read_csv("clean.csv")
 
-##### Attempt No. 1 -- without runtime #####
+##### Attempt No. 1 (aka Model A) -- without runtime #####
 runs <- r_data[,-3] %>%
   filter(!is.na(pace_min))
 
@@ -43,7 +47,7 @@ pred_run = predict(rf_run, newdata=testing[-3])
 testingpred <- testing
 testingpred$pred <- pred_run
 
-##### Attempt No. 2 -- with runtime #####
+##### Attempt No. 2 (aka Model B) -- with runtime #####
 runs2 <- r_data %>%
   separate(time_corr, c("h", "m", "s"), sep = ":") %>%
   filter(!is.na(pace_min))
@@ -83,7 +87,7 @@ pred_run2 = predict(rf_run2, newdata=testing2[-6])
 testingpred2 <- testing2
 testingpred2$pred_w_time <- pred_run2
 
-##### Comparing the Two #####
+##### Comparing the Two Models #####
 compare <- full_join(testingpred, testingpred2)
 compare <- compare %>% select(1:2,5:7,3:4,8)
 
@@ -96,7 +100,24 @@ compared <- compare %>%
   mutate(w_time_error = abs(rfpred_pace_w_time - actual_pace)) %>%
   mutate(time_model_improve = wo_time_error - w_time_error)
 
+##### Graphing the Model Comparisons #####
 hist(compared$time_model_improve)
+
+myPalette <- colorRampPalette(brewer.pal(11, "Spectral"))
+sc <- scale_colour_gradientn(colors = myPalette(100), limits=c(4, 10))
+
+ggplot(data = compared) + 
+  geom_point(mapping = aes(x = Date, y = time_model_improve,
+                           color = actual_pace)) + 
+  sc +
+  theme_dark() +
+  scale_x_date(breaks = "years", date_labels = "20%y") +
+  scale_y_continuous(name = "Accuracy of Model B compared to A (min/mi)",
+                     breaks = c(-1.5,-1,-0.5,0,0.5,1,1.5), 
+                     labels = c(-1.5,-1,-0.5,0,0.5,1,1.5),
+                     limits = c(-1.51,1.51)) +
+  ggtitle("Accuracy of Model B (w/ run time) over Model A (w/o run time) ")
+
 
 compared_A <- compared %>%
   separate(Date, c("year", "month", "day"), sep = "-")
