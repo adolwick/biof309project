@@ -74,12 +74,6 @@ rf_run2
 print(rf_run2$mse)
   #final mse = .16 ... WAY better than last time
 print(rf_run2$importance)
-#            %IncMSE IncNodePurity
-# Date    0.17894620     146.93419
-# Mileage 0.71264641     238.39583
-# h       0.32321526      34.68238
-# m       1.04332152     207.14858
-# s       0.01125933      49.66407
 # the runtime variable was unsurprisingly hugely important
 # mileage was also very important, which also makes sense
 
