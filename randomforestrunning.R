@@ -60,9 +60,10 @@ runs2 <- r_data2 %>%
   mutate(runtime_min = 60*h + m + s/60) %>%
   select(1,2,7,6)
 
+set.seed(1)
 sample_run2 = sample.split(runs2$pace_min, SplitRatio = .75)
-training2 = subset(runs2, sample_run == TRUE)
-testing2  = subset(runs2, sample_run == FALSE)
+training2 = subset(runs2, sample_run2 == TRUE)
+testing2  = subset(runs2, sample_run2 == FALSE)
 
 rf_run2 <- randomForest(
   pace_min ~ .,
@@ -70,7 +71,7 @@ rf_run2 <- randomForest(
   importance=TRUE
 )
 rf_run2
-  #80.97% var explained ... WAY better than last time
+  #81.3% var explained ... WAY better than last time
 print(rf_run2$mse)
   #final mse = .16 ... WAY better than last time
 print(rf_run2$importance)
@@ -83,6 +84,9 @@ pred_run2 = predict(rf_run2, newdata=testing2[-4])
 #looking at the predicted values of each run in the test sample
 testingpred2 <- testing2
 testingpred2$pred_w_time <- pred_run2
+
+lm1 <- lm(pace_min ~ pred_w_time, testingpred2)
+summary(lm1)
 
 ##### Comparing the Two Models #####
 compare <- full_join(testingpred, testingpred2)
